@@ -42,7 +42,7 @@ function PreviewBox() {
       >
         <header>
           <div className="menu-title">
-            <img className="rss-logo" src="./rss-logo.png" alt="img" />
+            <img className="rss-logo" src="./src/assets/rss-logo.png" alt="img" />
             <span className="rss-title">RSS Новости</span>
           </div>
           <a href="#">
@@ -54,14 +54,14 @@ function PreviewBox() {
 
         <div className={previewContentCn} ref={previewRef}>
           {/* <input type="submit" value="TodoList" onClick={printTodo} /> */}
-          {imgLinks[currentId] === "./noimage.jpg" || !imgLinks[currentId] ? null : (
+          {imgLinks[currentId] === "./src/assets/noimage.jpg" || !imgLinks[currentId] ? null : (
             <img className="menu-todo-logo" src={imgLinks[currentId]} alt="img" />
           )}
           {currentId ? (
             fullText[currentId]
           ) : (
             <div className="push">
-              <img className="pointer" src="./pointer.jpg" alt="pointer" />
+              <img className="pointer" src="./src/assets/pointer.jpg" alt="pointer" />
               <h2>{text}</h2>
             </div>
           )}

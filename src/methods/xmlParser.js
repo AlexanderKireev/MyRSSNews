@@ -16,7 +16,7 @@ const convertDOMtoContetntData = (parsedDOM) => {
       imgUrl:
         item.querySelector("image > url") !== null
           ? item.querySelector("image > url").textContent
-          : "./noimage.jpg",
+          : "./src/assets/noimage.jpg",
       fullText:
         item.querySelector("full-text") !== null
           ? correctText(item.querySelector("full-text").textContent)
@@ -43,7 +43,7 @@ export const parsingHtml = (htmlString) => {
       description: correctText(li.slice(firstDecriptionIndx, lastDecriptionIndx))
         .replaceAll(/<.*?>/g, "")
         .replaceAll(/{.*?}/g, ""),
-      imgUrl: "./noimage.jpg",
+      imgUrl: "./src/assets/noimage.jpg",
       fullText: null,
     };
     return post;

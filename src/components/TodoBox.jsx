@@ -42,7 +42,7 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
             <ul className="archive" onClick={() => setIsArchiveOn(false)}>
               <li className="archive-title">{archiveTitleBack}</li>
               <li>
-                <img className="archive-logo-arrow" src="./arrow-left.png" alt="img" />
+                <img className="archive-logo-arrow" src="./src/assets/arrow-left.png" alt="img" />
               </li>
             </ul>
             {/* </a> */}
@@ -76,7 +76,7 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
           <ul className="archive" onClick={() => setIsArchiveOn(true)}>
             <li className="archive-title">{archiveTitle}</li>
             <li>
-              <img className={archLogoCn} src="./archive.png" alt="img" />
+              <img className={archLogoCn} src="./src/assets/archive.png" alt="img" />
             </li>
           </ul>
           {/* </div> */}

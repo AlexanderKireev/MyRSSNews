@@ -132,7 +132,7 @@ const searchImgLink = (content, searchText, alternativeSearchText) => {
       ? content.indexOf(alternativeSearchText)
       : content.indexOf(searchText);
   if (indexOfText < 0) {
-    return "./noimage.jpg";
+    return "./src/assets/noimage.jpg";
   }
   const firstQuoteIndex = content.indexOf('"', content.indexOf('"', indexOfText) + 1) + 1;
   const lastQuoteIndex = content.indexOf('"', firstQuoteIndex);

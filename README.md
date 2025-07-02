@@ -2,8 +2,7 @@
 
 ### Ссылка на демо-сайт: [https://alexanderkireev.github.io/](https://alexanderkireev.github.io/)
 
-
-https://github.com/user-attachments/assets/05c45025-10a6-4627-89f7-12a62d05b502
+https://github.com/user-attachments/assets/b75f6d3c-66fe-4711-b7e1-6be34a21a471
 
 - Возможность предварительного просмотра содержимого новости (при клике на картинку новости)
 - Анимированное добавление, а также удаление новостей в Архив

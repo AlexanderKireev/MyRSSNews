@@ -7,7 +7,6 @@ import { boxTitles } from "../constants.js";
 
 const TodoBoxes = () => {
   const [archLogoCn, setArchLogoCn] = useState({ first: "archive-logo", second: "archive-logo" });
-
   const { todos, archiveTodos, boxesCn } = useContext(DataContext);
 
   usePopState();
@@ -19,11 +18,11 @@ const TodoBoxes = () => {
       <div className={boxesCn}>
         {Object.entries(boxTitles).map(([boxNumber, title], i) => (
           <TodoBox
+            archiveTodos={archiveTodos[boxNumber]}
             archLogoCn={archLogoCn[boxNumber]}
             boxTitle={title}
             key={i}
             todos={todos[boxNumber]}
-            archiveTodos={archiveTodos[boxNumber]}
           />
         ))}
       </div>

@@ -377,15 +377,29 @@ p {
   color: white
 }
 
-.box-spinner {
+.countdown {
   /* height: 10%; */
   display: flex;
-  margin: 15px 0 0 25px;
-  /* align-items: center; */
-  align-items: start;
+  margin: 14px 0 0 25px;
+  align-items: center;
+  /* align-items: start; */
+  /* align-items: end; */
   /* justify-content: center; */
-  justify-content: start;
+  /* justify-content: start; */
 }
+
+.box-spinner {
+  /* height: 10%; */
+  /* display: flex; */
+  margin: 3px 8px 0 0;
+  /* margin-right: 10px; */
+  /* align-items: center; */
+  /* align-items: start; */
+  /* justify-content: center; */
+  /* justify-content: start; */
+}
+
+
 
 .spinner {
   z-index: 1;

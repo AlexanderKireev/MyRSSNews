@@ -2,12 +2,17 @@ import React, { useRef, useMemo, useState, useEffect } from "react";
 import useSize from "../hooks/useSize.js";
 // import cn from "classnames";
 import Spinner from "./Spinner.jsx";
+import Countdown from "./Countdown.jsx";
 import Todo from "./Todo.jsx";
 
 const archiveTitle = "Архив";
 const archiveTitleBack = "К новостям";
+const initialTimeLeft = 24;
 
 const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
+  // const targetDate = "2025-07-10T10:00:00"; // Пример целевой даты
+  const [seconds, setSeconds] = useState(initialTimeLeft);
+
   const target = useRef(null);
   // const headRef = useRef(null);
   const size = useSize(target);
@@ -47,7 +52,13 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
             </ul>
             {/* </a> */}
           </header>
-          {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null}
+          {/* {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null} */}
+          {todos.length === 0 ? (
+            <div className="countdown">
+              <Spinner cn="box-spinner" size="40" />
+              <Countdown seconds={seconds} setSeconds={setSeconds} />
+            </div>
+          ) : null}
           <ul className="todo-list">
             {renderedTodos.map((todo) => (
               <li
@@ -81,7 +92,14 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
           </ul>
           {/* </div> */}
         </header>
-        {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null}
+        {/* {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null} */}
+        {/* {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null} */}
+        {todos.length === 0 ? (
+          <div className="countdown">
+            <Spinner cn="box-spinner" size="40" />
+            <Countdown seconds={seconds} setSeconds={setSeconds} />
+          </div>
+        ) : null}
         <ul className="todo-list">
           {todos.map((todo) => (
             <li
@@ -99,7 +117,7 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
         </ul>
       </div>
     );
-  }, [todos, renderedTodos, isArchiveOn]);
+  }, [todos, renderedTodos, isArchiveOn, seconds]);
 
   return <>{memoizedTodoBox}</>;
 };

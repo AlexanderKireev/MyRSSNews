@@ -1,33 +1,19 @@
 import React, { useContext, useMemo } from "react";
 import DataContext from "../contexts/dataContext";
 
+const title = "RSS Новости";
 const text = "Нажми на картинку любой новости";
 
-function PreviewBox() {
-  const {
-    // todos,
-    // archiveTodos,
-    currentId,
-    imgLinks,
-    fullText,
-    previewContentCn,
-    previewRef,
-    // setZIndex,
-    zIndex,
-  } = useContext(DataContext);
+const PreviewBox = () => {
+  const { currentId, imgLinks, fullText, previewContentCn, previewRef, zIndex } =
+    useContext(DataContext);
 
   const memoizedPreviewBox = useMemo(() => {
-    console.log("preview rerendered"); // Не забыть удалить
+    console.log("preview rerendered"); // не забыть удалить
 
     const closePreview = () => {
-      // setZIndex(-1);
       window.history.back();
     };
-
-    // const printTodo = () => {
-    //   console.warn(todos);
-    //   console.warn(archiveTodos);
-    // }
 
     if (zIndex === -1 && screen.orientation.type === "portrait-primary") {
       return null;
@@ -43,7 +29,7 @@ function PreviewBox() {
         <header>
           <div className="menu-title">
             <img className="rss-logo" src="./src/assets/rss-logo.png" alt="img" />
-            <span className="rss-title">RSS Новости</span>
+            <span className="rss-title">{title}</span>
           </div>
           <a href="#">
             <span className="close-button" onClick={closePreview}>
@@ -53,7 +39,6 @@ function PreviewBox() {
         </header>
 
         <div className={previewContentCn} ref={previewRef}>
-          {/* <input type="submit" value="TodoList" onClick={printTodo} /> */}
           {imgLinks[currentId] === "./src/assets/noimage.jpg" || !imgLinks[currentId] ? null : (
             <img className="menu-todo-logo" src={imgLinks[currentId]} alt="img" />
           )}
@@ -71,6 +56,6 @@ function PreviewBox() {
   }, [currentId, previewContentCn, zIndex]);
 
   return <>{memoizedPreviewBox}</>;
-}
+};
 
 export default PreviewBox;

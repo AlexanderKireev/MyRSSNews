@@ -10,11 +10,9 @@ const archiveTitleBack = "К новостям";
 const initialTimeLeft = 24;
 
 const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
-  // const targetDate = "2025-07-10T10:00:00"; // Пример целевой даты
   const [seconds, setSeconds] = useState(initialTimeLeft);
 
   const target = useRef(null);
-  // const headRef = useRef(null);
   const size = useSize(target);
   const [isArchiveOn, setIsArchiveOn] = useState(false);
   const [renderedTodos, setRenderedTodos] = useState([]);
@@ -23,17 +21,9 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
 
   useEffect(() => {
     if (isArchiveOn) {
-      // const rT = archiveTodos.filter((_todo, i) => i < 16);
       setRenderedTodos(archiveTodos.filter((_todo, i) => i < 16));
     }
   }, [todos, isArchiveOn]);
-
-  // const handleArchiveOn = () => {
-  //   setIsArchiveOn(true);
-  //   // scrollToRef();
-  //   // headRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-  //   // element.scrollTo(0, 100);
-  // };
 
   const memoizedTodoBox = useMemo(() => {
     console.log("todobox rerendered"); //////////////////
@@ -43,16 +33,13 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
         <div className="box archive-box" ref={target}>
           <header>
             <span className="box-title">{boxTitle}</span>
-            {/* <a href="#" onClick={() => setIsArchiveOn(false)}> */}
             <ul className="archive" onClick={() => setIsArchiveOn(false)}>
               <li className="archive-title">{archiveTitleBack}</li>
               <li>
                 <img className="archive-logo-arrow" src="./src/assets/arrow-left.png" alt="img" />
               </li>
             </ul>
-            {/* </a> */}
           </header>
-          {/* {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null} */}
           {todos.length === 0 ? (
             <div className="countdown">
               <Spinner cn="box-spinner" size="40" />
@@ -82,18 +69,13 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
       <div className="box" ref={target}>
         <header>
           <span className="box-title">{boxTitle}</span>
-          {/* <div onClick={() => setIsArchiveOn(false)}> */}
-          {/* <ul className="archive" onClick={() => setIsArchiveOn(true)}> */}
           <ul className="archive" onClick={() => setIsArchiveOn(true)}>
             <li className="archive-title">{archiveTitle}</li>
             <li>
               <img className={archLogoCn} src="./src/assets/archive.png" alt="img" />
             </li>
           </ul>
-          {/* </div> */}
         </header>
-        {/* {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null} */}
-        {/* {todos.length === 0 ? <Spinner cn="box-spinner" size="40" /> : null} */}
         {todos.length === 0 ? (
           <div className="countdown">
             <Spinner cn="box-spinner" size="40" />

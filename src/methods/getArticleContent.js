@@ -70,7 +70,7 @@ const getBloknotComponents = (title, articleBody, link) => {
       </a>
     </p>,
   );
-  for (let i = 1; i <= 3; i += 1) {
+  for (let i = 1; i <= 4; i += 1) {
     result.push(<br key={strings.length + i + 2}></br>);
   }
   return result;
@@ -104,7 +104,7 @@ const getRbcAndMailComponents = (headline, articleBody, description, link, feed)
     </p>,
   );
 
-  for (let i = 1; i <= 3; i += 1) {
+  for (let i = 1; i <= 4; i += 1) {
     result.push(<br key={paragraphs.length + i + 2}></br>);
   }
   return result;

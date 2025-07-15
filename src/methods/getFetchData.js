@@ -34,10 +34,7 @@ export function wrapPromise(promise) {
       if (status === "pending") {
         throw suspender;
       } else if (status === "error") {
-        // alert("ошибка fetch");
         throw suspender;
-        // return result;
-        // throw result;
       } else if (status === "success") {
         return result;
       }
@@ -54,9 +51,7 @@ export const fetcher = async (url, fetchDelay) => {
     const data = await response.json();
     return data;
   } catch {
-    // alert("ошибка fetch1");
     return "Lorem insup";
-    // throw error;
   }
 };
 

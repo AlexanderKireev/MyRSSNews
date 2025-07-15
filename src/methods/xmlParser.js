@@ -28,7 +28,12 @@ const convertDOMtoContetntData = (parsedDOM) => {
 };
 
 export const parsingHtml = (htmlString) => {
-  const liStrings = htmlString.split("</li>");
+  let liStrings = [];
+  try {
+    liStrings = htmlString.split("</li>");
+  } catch {
+    return liStrings;
+  }
   liStrings.pop();
   const posts = liStrings.map((li) => {
     const firstTitleIndex = li.indexOf('"', li.indexOf("title=")) + 1;

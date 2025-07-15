@@ -27,6 +27,8 @@ export const correctText = (text) =>
     .replace(/&lt;/gi, "<")
     .replace(/&gt;/gi, ">")
     .replace(/&#39;/gi, "'")
+    .replace(/&hellip;/gi, "…")
+    .replace(/&deg;/gi, "°")
     .replace(/&iacute;/gi, "í")
     .replace(/&oacute;/gi, "ó")
     .replace(/&pound;/gi, "£")

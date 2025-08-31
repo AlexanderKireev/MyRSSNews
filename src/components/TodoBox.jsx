@@ -1,17 +1,13 @@
 import React, { useRef, useMemo, useState, useEffect } from "react";
 import useSize from "../hooks/useSize.js";
-// import cn from "classnames";
 import Spinner from "./Spinner.jsx";
-import Countdown from "./Countdown.jsx";
 import Todo from "./Todo.jsx";
+import { arrowLeftPath, archiveLogoPath } from "../routes.js";
 
 const archiveTitle = "Архив";
 const archiveTitleBack = "К новостям";
-const initialTimeLeft = 24;
 
 const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
-  const [seconds, setSeconds] = useState(initialTimeLeft);
-
   const target = useRef(null);
   const size = useSize(target);
   const [isArchiveOn, setIsArchiveOn] = useState(false);
@@ -26,8 +22,6 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
   }, [todos, isArchiveOn]);
 
   const memoizedTodoBox = useMemo(() => {
-    console.log("todobox rerendered"); //////////////////
-
     if (isArchiveOn) {
       return (
         <div className="box archive-box" ref={target}>
@@ -36,14 +30,13 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
             <ul className="archive" onClick={() => setIsArchiveOn(false)}>
               <li className="archive-title">{archiveTitleBack}</li>
               <li>
-                <img className="archive-logo-arrow" src="./src/assets/arrow-left.png" alt="img" />
+                <img className="archive-logo-arrow" src={arrowLeftPath} alt="img" />
               </li>
             </ul>
           </header>
           {todos.length === 0 ? (
             <div className="countdown">
               <Spinner cn="box-spinner" size="40" />
-              <Countdown seconds={seconds} setSeconds={setSeconds} />
             </div>
           ) : null}
           <ul className="todo-list">
@@ -72,14 +65,13 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
           <ul className="archive" onClick={() => setIsArchiveOn(true)}>
             <li className="archive-title">{archiveTitle}</li>
             <li>
-              <img className={archLogoCn} src="./src/assets/archive.png" alt="img" />
+              <img className={archLogoCn} src={archiveLogoPath} alt="img" />
             </li>
           </ul>
         </header>
         {todos.length === 0 ? (
           <div className="countdown">
             <Spinner cn="box-spinner" size="40" />
-            <Countdown seconds={seconds} setSeconds={setSeconds} />
           </div>
         ) : null}
         <ul className="todo-list">
@@ -99,7 +91,7 @@ const TodoBox = ({ archLogoCn, boxTitle, todos, archiveTodos }) => {
         </ul>
       </div>
     );
-  }, [todos, renderedTodos, isArchiveOn, seconds]);
+  }, [todos, renderedTodos, isArchiveOn]);
 
   return <>{memoizedTodoBox}</>;
 };

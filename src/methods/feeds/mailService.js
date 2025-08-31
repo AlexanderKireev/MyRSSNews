@@ -1,10 +1,9 @@
 import _ from "lodash";
 import parsingUrl from "../xmlParser.js";
-import todoOrder, {
+import {
   renderedTodoCount,
   mailTodoCount,
   todoRenderDelay,
-  // fetchDelay,
   parsedBlockLength,
   initialParseDelay,
   blockParseDelay,
@@ -18,17 +17,15 @@ const getFetchDelays = (todosLength, firstKey) => {
       parseDelay += blockParseDelay;
     }
     fetchDelays[i + firstKey] = parseDelay;
-    fetchDelays[i + firstKey + 20] = parseDelay;
+    fetchDelays[i + firstKey + mailTodoCount / 2] = parseDelay;
   }
   return fetchDelays;
 };
 
 const createMailTodos = (
-  { mailXml },
-  { firstRenderedTodos, secondRenderedTodos, secondArchiveTodos, mailArchive },
+  { firstRenderedTodos, secondRenderedTodos, firstArchiveTodos, secondArchiveTodos },
+  allMailTodos,
 ) => {
-  const mailTodos = [];
-  const allMailTodos = parsingUrl(mailXml).posts;
   const renderedDelays = getFetchDelays(renderedTodoCount / 2, 0);
   const archivedDelays = getFetchDelays(
     mailTodoCount / 2 - renderedTodoCount / 2,
@@ -37,33 +34,31 @@ const createMailTodos = (
   const fetchDelays = { ...renderedDelays, ...archivedDelays };
   allMailTodos.forEach((todo, i) => {
     todo.id = _.uniqueId();
-    // todo.cn = "initial";
     todo.feed = "mail";
     todo.fetchDelay = fetchDelays[i];
-    mailTodos.push(todo);
     switch (true) {
       case i < renderedTodoCount / 2: // i < 8 => Ростов-на-Дону
         todo.cn = "initial";
         // 0.06 * (i + 8)
         todo.renderDelay = todoRenderDelay * (i + renderedTodoCount / 2) + "s";
-        // todo.fetchDelay = fetchDelays[i];
-        secondRenderedTodos.push(todo);
+        secondRenderedTodos.splice(renderedTodoCount / 2 + i, 1, todo);
         break;
       // i >= 8 && i < 20 => Архив Ростова-на-Дону
       case i >= renderedTodoCount / 2 && i < mailTodoCount / 2:
         todo.cn = "add-to-archive";
-        secondArchiveTodos.push(todo);
+        secondArchiveTodos.splice(i, 1, todo);
         break;
       // i >= 20 && i < 28 => Россия
       case i >= mailTodoCount / 2 && i < mailTodoCount / 2 + renderedTodoCount / 2:
         todo.cn = "initial";
         todo.renderDelay =
           todoRenderDelay * (i - (mailTodoCount / 2 - renderedTodoCount / 2)) + "s"; // (i - 12)
-        firstRenderedTodos.push(todo);
+        firstRenderedTodos.splice(i - (mailTodoCount / 2 - renderedTodoCount / 2), 1, todo);
         break;
-      case i >= mailTodoCount / 2 + renderedTodoCount / 2: // i >= 28 => Архив Россия
+      // i >= 28 => Архив Россия
+      case i >= mailTodoCount / 2 + renderedTodoCount / 2:
         todo.cn = "add-to-archive";
-        mailArchive.push(todo);
+        firstArchiveTodos.splice(i - mailTodoCount / 2, 1, todo);
         break;
     }
   });
@@ -76,8 +71,8 @@ export const updateMailTodos = (
   const allMailTodos = parsingUrl(mailXml).posts;
   let firstNewTodosCounter = 0;
   let secondNewTodosCounter = 20;
-  const renderedDelays = getFetchDelays(16, 0);
-  const archivedDelays = getFetchDelays(4, 16);
+  const renderedDelays = getFetchDelays(16, 0); /////////////////////
+  const archivedDelays = getFetchDelays(4, 16); //////////////////////
   const fetchDelays = { ...renderedDelays, ...archivedDelays };
   allMailTodos.forEach((todo, i) => {
     // todo.fetchDelay = fetchDelay[newTodosCounter];

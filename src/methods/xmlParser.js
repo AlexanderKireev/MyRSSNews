@@ -9,10 +9,13 @@ const convertDOMtoContetntData = (parsedDOM) => {
   const itemElements = parsedDOM.querySelectorAll("item");
   const items = Array.from(itemElements);
   const posts = items.map((item) => {
+    const descr = item.querySelector("description")?.textContent
+      ? correctText(item.querySelector("description").textContent)
+      : "";
     const post = {
       title: item.querySelector("title").textContent,
       link: item.querySelector("link").textContent,
-      description: correctText(item.querySelector("description").textContent),
+      description: descr,
       imgUrl:
         item.querySelector("image > url") !== null
           ? item.querySelector("image > url").textContent
@@ -64,9 +67,7 @@ const parsingUrl = (xmlString) => {
     const error = new Error(errorNode);
     error.parsingError = true;
     console.error(error);
-    // alert("Ошибка парсера");
     return { feed: null, posts: [] };
-    // throw error;
   }
   return convertDOMtoContetntData(parsedDOM);
 };

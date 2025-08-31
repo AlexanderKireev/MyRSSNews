@@ -15,7 +15,6 @@ const TodoLogo = ({ todo }) => {
     setImgLinks,
     setPreviewContentCn,
     setZIndex,
-    // zIndex,
     setVisitedIds,
   } = useContext(DataContext);
 
@@ -49,25 +48,22 @@ const TodoLogo = ({ todo }) => {
   }, [data]);
 
   const memoizedTodoLogo = useMemo(() => {
-    console.log("logo rerendered"); /// не забыть удалить
-
     const changeTodo = () => {
       if (!history.state && screen.orientation.type === "portrait-primary") {
         window.history.pushState({ handleState: true }, null, "./");
         setBoxesCn("boxes no-scroll");
       }
       setZIndex(1);
-      setVisitedIds((prevState) => ([todo.id, ...prevState]));
+      setVisitedIds((prevState) => [todo.id, ...prevState]);
       setCurrentId(todo.id);
       scrollToTop();
       setPreviewContentCn("menu-content show");
       setTimeout(() => {
-        setPreviewContentCn("menu-content"); /////// надо переименовать в preview-content
+        setPreviewContentCn("menu-content"); // надо переименовать в preview-content
       }, previewTransitionDuration);
     };
 
     return (
-      // зачем img-include ?????
       <div className="todo-logo img-include">
         <img
           alt="img"

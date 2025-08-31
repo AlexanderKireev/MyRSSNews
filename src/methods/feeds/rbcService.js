@@ -2,28 +2,43 @@ import _ from "lodash";
 import { renderedTodoCount, todoRenderDelay } from "../../constants.js";
 import parsingUrl from "../xmlParser.js";
 
-const createRbcTodos = ({ rbcXml }, { firstRenderedTodos, firstRbcArchive, secondRbcArchive }) => {
-  const allRbcTodos = parsingUrl(rbcXml).posts;
+const createRbcTodos = ({ rbcXml }, { firstRenderedTodos, firstArchiveTodos }, isMailError) => {
+  const allTodos = parsingUrl(rbcXml).posts;
+  const  newTodos = allTodos.filter((todo) => todo.fullText);
+  const  deletedTodos = allTodos.filter((todo) => !todo.fullText);
+  const allRbcTodos = [...newTodos, ...deletedTodos];
   allRbcTodos.shift(); // for Demo-mode
   allRbcTodos.shift(); // for Demo-mode
   allRbcTodos.forEach((todo, i) => {
     const uniqId = _.uniqueId();
     todo.id = uniqId;
-    // todo.cn = "initial";
     todo.feed = "rbc";
-    // i < 8
-    if (i < renderedTodoCount / 2) {
-      todo.cn = "initial";
-      todo.renderDelay = todoRenderDelay * i + "s";
-      firstRenderedTodos.push(todo);
-    } else if (i >= renderedTodoCount / 2 && i < renderedTodoCount) {
-      todo.cn = "add-to-archive";
-      // firstArchiveTodos.push(todo);
-      firstRbcArchive.push(todo);
-    } else {
-      todo.cn = "add-to-archive";
-      // firstArchiveTodos.push(todo);
-      secondRbcArchive.push(todo);
+    switch (true) {
+      // i < 8
+      case i < renderedTodoCount / 2:
+        todo.cn = "initial";
+        todo.renderDelay = todoRenderDelay * i + "s";
+        firstRenderedTodos.splice(i, 1, todo);
+        break;
+      // i >= 8 && i < 16 => Начало архива
+      case i >= renderedTodoCount / 2 && i < renderedTodoCount:
+        todo.cn = isMailError ? "initial" : "add-to-archive";
+        todo.renderDelay = isMailError ? todoRenderDelay * i + "s" : "0";
+        if (isMailError) {
+          firstRenderedTodos.splice(i, 1, todo);
+        } else {
+          firstArchiveTodos.splice(i - renderedTodoCount / 2, 1, todo);
+        }
+        break;
+      // i >= 16
+      case i >= renderedTodoCount:
+        todo.cn = "add-to-archive";
+        if (isMailError) {
+          firstArchiveTodos.splice(i - renderedTodoCount, 1, todo);
+        } else {
+          firstArchiveTodos.splice(i + renderedTodoCount / 2 / 2, 1, todo);
+        }
+        break;
     }
   });
 };

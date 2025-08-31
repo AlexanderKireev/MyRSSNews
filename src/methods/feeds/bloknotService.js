@@ -3,28 +3,45 @@ import { renderedTodoCount, todoRenderDelay, initialParseDelay } from "../../con
 import { parsingHtml } from "../xmlParser.js";
 
 const createBloknotTodos = (
-  { bloknotXml, bloknotSecondPageXml },
+  { bloknotXml, bloknotSecondPageXml, bloknotThirdPageXml },
   { secondRenderedTodos, secondArchiveTodos },
+  isMailError,
 ) => {
-  const bloknotTodos = [];
   const firstPage = parsingHtml(bloknotXml);
   const secondPage = parsingHtml(bloknotSecondPageXml);
-  const allBloknotTodos = [...firstPage, ...secondPage];
+  const thirdPage = parsingHtml(bloknotThirdPageXml);
+  const allBloknotTodos = [...firstPage, ...secondPage, ...thirdPage];
   allBloknotTodos.shift(); // for Demo-mode
   allBloknotTodos.forEach((todo, i) => {
-    // todo.description = todo.description.replaceAll(/<.*?>/g, "").replaceAll(/{.*?}/g, "");
     todo.id = _.uniqueId();
     todo.feed = "bloknot";
     todo.fetchDelay = initialParseDelay;
-    bloknotTodos.push(todo);
-    // i < 8
-    if (i < renderedTodoCount / 2) {
-      todo.cn = "initial";
-      todo.renderDelay = todoRenderDelay * i + "s";
-      secondRenderedTodos.push(todo);
-    } else {
-      todo.cn = "add-to-archive";
-      secondArchiveTodos.push(todo);
+    switch (true) {
+      // i < 8
+      case i < renderedTodoCount / 2:
+        todo.cn = "initial";
+        todo.renderDelay = todoRenderDelay * i + "s";
+        secondRenderedTodos.splice(i, 1, todo);
+        break;
+      // i >= 8 && i < 16 => Начало архива
+      case i >= renderedTodoCount / 2 && i < renderedTodoCount:
+        todo.cn = isMailError ? "initial" : "add-to-archive";
+        todo.renderDelay = isMailError ? todoRenderDelay * i + "s" : "0";
+        if (isMailError) {
+          secondRenderedTodos.splice(i, 1, todo);
+        } else {
+          secondArchiveTodos.splice(i - renderedTodoCount / 2, 1, todo);
+        }
+        break;
+      // i >= 16
+      case i >= renderedTodoCount:
+        todo.cn = "add-to-archive";
+        if (isMailError) {
+          secondArchiveTodos.splice(i - renderedTodoCount, 1, todo);
+        } else {
+          secondArchiveTodos.splice(i + renderedTodoCount / 2 / 2, 1, todo);
+        }
+        break;
     }
   });
 };
@@ -32,7 +49,6 @@ const createBloknotTodos = (
 export const updateBloknotTodos = ({ bloknotXml }, { secondAddedTodos, secondOldTitles }) => {
   const allBloknotTodos = parsingHtml(bloknotXml);
   allBloknotTodos.forEach((todo) => {
-    // todo.description = todo.description.replaceAll(/<.*?>/g, "").replaceAll(/{.*?}/g, "");
     if (!secondOldTitles.includes(todo.description)) {
       todo.id = _.uniqueId();
       todo.cn = "initial add";

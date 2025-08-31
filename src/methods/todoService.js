@@ -1,28 +1,33 @@
 import createRbcTodos, { updateRbcTodos } from "./feeds/rbcService.js";
 import createMailTodos, { updateMailTodos } from "./feeds/mailService.js";
 import createBloknotTodos, { updateBloknotTodos } from "./feeds/bloknotService.js";
-import { boxTitles } from "../constants.js";
+import parsingUrl from "./xmlParser.js";
+import boxTitles, { renderedTodoCount, mailTodoCount } from "../constants.js";
 
 const createTodos = (data, setTodos, setArchiveTodos) => {
+  const { mailXml } = data;
+  const allMailTodos = parsingUrl(mailXml).posts;
+  const isMailError = allMailTodos.length === 0;
+  const archiveCount = isMailError
+    ? mailTodoCount / 2 - renderedTodoCount / 2
+    : renderedTodoCount * 2;
   const content = {
-    firstRenderedTodos: [],
-    secondRenderedTodos: [],
-    // firstArchiveTodos: [],
-    secondArchiveTodos: [],
-    firstRbcArchive: [],
-    secondRbcArchive: [],
-    mailArchive: [],
+    firstRenderedTodos: new Array(renderedTodoCount),
+    secondRenderedTodos: new Array(renderedTodoCount),
+    firstArchiveTodos: new Array(archiveCount),
+    secondArchiveTodos: new Array(archiveCount + 1),
   };
-  createRbcTodos(data, content);
-  createBloknotTodos(data, content);
-  createMailTodos(data, content);
+  if (!isMailError) {
+    createMailTodos(content, allMailTodos);
+  }
+  createRbcTodos(data, content, isMailError);
+  createBloknotTodos(data, content, isMailError);
   setTodos({
     first: content.firstRenderedTodos,
     second: content.secondRenderedTodos,
   });
   setArchiveTodos({
-    // first: content.firstArchiveTodos, ////
-    first: [...content.firstRbcArchive, ...content.mailArchive, ...content.secondRbcArchive],
+    first: content.firstArchiveTodos,
     second: content.secondArchiveTodos,
   });
 };

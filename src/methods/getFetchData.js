@@ -2,7 +2,9 @@ const getFetchData = (urls) =>
   Promise.all(
     urls.map((url) =>
       fetch(url)
-        .then((response) => response.json())
+        .then((response) => {
+          return response.json();
+        })
         .then((data) => {
           const firstIndex = data.indexOf("bigline");
           if (firstIndex < 0) {
@@ -12,7 +14,10 @@ const getFetchData = (urls) =>
             return data.slice(firstIndex, lastIndex);
           }
         })
-        .catch((error) => error),
+        .catch((error) => {
+          console.warn("ошибка");
+          return error;
+        }),
     ),
   );
 
@@ -44,14 +49,32 @@ export function wrapPromise(promise) {
 
 const delay = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
-export const fetcher = async (url, fetchDelay) => {
+const repeatFetch = async (url) => {
   try {
-    await delay(fetchDelay);
+    await delay(4000);
     const response = await fetch(url);
     const data = await response.json();
     return data;
   } catch {
     return "Lorem insup";
+  }
+};
+
+export const fetcher = async (url, fetchDelay) => {
+  try {
+    await delay(fetchDelay);
+    const response = await fetch(url);
+    const data = await response.json();
+    // ловим ошибку капчи {"captchaPath":"/captcha/img/6","isRlimitedAgain":false}
+    if (data.includes(`"isRlimitedAgain":false`)) {
+      console.error(data); ////////////////////////
+      repeatFetch(url);
+    } else {
+      return data;
+    }
+  } catch {
+    console.error("repeatFetch in catch"); ////////////////////////
+    repeatFetch(url);
   }
 };
 

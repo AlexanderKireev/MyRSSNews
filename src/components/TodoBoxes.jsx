@@ -3,7 +3,7 @@ import DataContext from "../contexts/dataContext.js";
 import usePopState from "../hooks/usePopState.js";
 import useRequestData from "../hooks/useRequestData.js";
 import TodoBox from "./TodoBox.jsx";
-import { boxTitles } from "../constants.js";
+import boxTitles from "../constants.js";
 
 const TodoBoxes = () => {
   const [archLogoCn, setArchLogoCn] = useState({ first: "archive-logo", second: "archive-logo" });
@@ -13,7 +13,6 @@ const TodoBoxes = () => {
   useRequestData(setArchLogoCn);
 
   const memoizedTodoBoxes = useMemo(() => {
-    console.log("todoboxeS rerendered"); // не забыть удалить
     return (
       <div className={boxesCn}>
         {Object.entries(boxTitles).map(([boxNumber, title], i) => (

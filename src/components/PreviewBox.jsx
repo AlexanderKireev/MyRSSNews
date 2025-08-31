@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from "react";
-import DataContext from "../contexts/dataContext";
+import DataContext from "../contexts/dataContext.js";
+import { noimagePath, noimageStopPath, pointerPath, rssLogoPath } from "../routes.js";
 
 const title = "RSS Новости";
 const text = "Нажми на картинку любой новости";
@@ -9,12 +10,9 @@ const PreviewBox = () => {
     useContext(DataContext);
 
   const memoizedPreviewBox = useMemo(() => {
-    console.log("preview rerendered"); // не забыть удалить
-
     const closePreview = () => {
       window.history.back();
     };
-
     if (zIndex === -1 && screen.orientation.type === "portrait-primary") {
       return null;
     }
@@ -28,7 +26,7 @@ const PreviewBox = () => {
       >
         <header>
           <div className="menu-title">
-            <img className="rss-logo" src="./src/assets/rss-logo.png" alt="img" />
+            <img className="rss-logo" src={rssLogoPath} alt="img" />
             <span className="rss-title">{title}</span>
           </div>
           <a href="#">
@@ -39,14 +37,16 @@ const PreviewBox = () => {
         </header>
 
         <div className={previewContentCn} ref={previewRef}>
-          {imgLinks[currentId] === "./src/assets/noimage.jpg" || !imgLinks[currentId] ? null : (
-            <img className="menu-todo-logo" src={imgLinks[currentId]} alt="img" />
-          )}
+          {imgLinks[currentId] === noimagePath ||
+          imgLinks[currentId] === noimageStopPath ||
+          !imgLinks[currentId] ? null : (
+              <img className="menu-todo-logo" src={imgLinks[currentId]} alt="img" />
+            )}
           {currentId ? (
             fullText[currentId]
           ) : (
             <div className="push">
-              <img className="pointer" src="./src/assets/pointer.jpg" alt="pointer" />
+              <img className="pointer" src={pointerPath} alt="pointer" />
               <h2>{text}</h2>
             </div>
           )}

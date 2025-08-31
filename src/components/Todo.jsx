@@ -14,10 +14,7 @@ const Todo = ({ todo }) => {
   }
 
   const memoizedTodo = useMemo(() => {
-    console.log("todo rerendered"); // не забыть удалить
-
     const changeTodoTextClassName = () => cn({ "todo-text": true }, { visited: visited });
-
     return (
       <div className="todo">
         <Suspense

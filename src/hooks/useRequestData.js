@@ -15,9 +15,10 @@ const useRequestData = (setArchLogoCn) => {
 
   useEffect(() => {
     const requestData = async () => {
-      const [rbcXml, mailXml, bloknotXml, bloknotSecondPageXml] = await getFetchData(urls);
+      const [rbcXml, mailXml, bloknotXml, bloknotSecondPageXml, bloknotThirdPageXml] =
+        await getFetchData(urls);
       setFetchData({ rbc: rbcXml + " ", mail: mailXml, bloknot: bloknotXml + " " });
-      const data = { rbcXml, mailXml, bloknotXml, bloknotSecondPageXml };
+      const data = { rbcXml, mailXml, bloknotXml, bloknotSecondPageXml, bloknotThirdPageXml };
       createTodos(data, setTodos, setArchiveTodos);
       setTimeout(() => {
         console.warn("run autoUpdate"); // не забыть удалить
@@ -32,22 +33,17 @@ const useRequestData = (setArchLogoCn) => {
       let changeCounter = 0;
       const [rbc, mail, bloknot] = await getFetchData(urls);
       const feedXmls = { rbc, mail, bloknot };
-      // console.warn(mail);
       Object.entries(feedXmls).forEach(([key, value]) => {
         if (fetchData[key] !== value) {
           console.log(`${key} Изменились!`); // не забыть удалить
           setFetchData({ ...fetchData, [key]: value });
           changeCounter += 1;
-        } else {
-          console.log(`${key} не изменились!`); // не забыть удалить
         }
       });
       if (changeCounter > 0) {
-        console.log(changeCounter); // не забыть удалить
         setIsAutoUpdateRun(false);
         setNewsChangeCounter(changeCounter);
       } else {
-        console.log(changeCounter); // не забыть удалить
         setTimeout(() => autoUpdate(), contentUpdateInterval);
       }
     };
@@ -65,9 +61,7 @@ const useRequestData = (setArchLogoCn) => {
         bloknotXml: fetchData.bloknot,
       };
       const newTodos = updateTodos(data, todos, archiveTodos);
-      console.log(newTodos); // не забыть удалить
       if (!newTodos) {
-        console.log("Новость НЕ! обновлена, пора запускать autoUpdate"); // не забыть удалить
         setIsAutoUpdateRun(true);
       } else {
         const methods = { setTodos, setArchiveTodos, setArchLogoCn, setIsAutoUpdateRun };

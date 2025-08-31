@@ -1,16 +1,28 @@
 import getRenderData from "./getRenderData.js";
-import { todoAnimationDelay, boxTitles } from "../constants.js";
+import boxTitles, { todoAnimationDelay } from "../constants.js";
 
 const renderTodoBox = (
-  { addedTodos, deletedTodos, deletedTodosIdxs, dontGoToArchiveIdxs },
+  { addedTodos, deletedTodos, deletedTodosIdxs, selfUpdatedNewsIdxs, selfDeletedNewsIdxs },
   todos,
   archiveTodos,
   boxNumber,
   { setTodos, setArchiveTodos, setArchLogoCn, setIsAutoUpdateRun },
 ) => {
-  let dontGoToArchiveIdxsLength = dontGoToArchiveIdxs.length;
+  let dontGoToArchiveIdxsLength = selfUpdatedNewsIdxs.length + selfDeletedNewsIdxs.length;
+  const addedToArchiveTodos = [];
   setArchLogoCn((prevState) => ({ ...prevState, [boxNumber]: "archive-logo run" }));
+
+  if (
+    archiveTodos[boxNumber].length > 16 &&
+    archiveTodos[boxNumber][archiveTodos[boxNumber].length - 1]?.cn !== "hide-from-archive"
+  ) {
+    for (let x = archiveTodos[boxNumber].length - 1; x >= 16; x -= 1) {
+      archiveTodos[boxNumber][x].cn = "hide-from-archive";
+    }
+  }
+
   addedTodos.forEach((newTodo, i) => {
+    // мутация todos, подумать как исправить
     todos[boxNumber][deletedTodosIdxs[i]].cn = "hide";
     // высота анимации полета элемента: высоту элемента <li> {hight: 56px} умножаем на его
     // порядковый номер (текущий индекс + 1), добавляем нижний отступ <header> {margin-bottom:5px}
@@ -21,7 +33,18 @@ const renderTodoBox = (
     if (dontGoToArchiveIdxsLength > 0) {
       dontGoToArchiveIdxsLength -= 1;
     } else {
-      archiveTodos[boxNumber][15 - i].cn = "hide-from-archive";
+      if (
+        archiveTodos[boxNumber][0]?.cn !== "hide-from-archive" &&
+        archiveTodos[boxNumber].length >= 16
+      ) {
+        for (let j = archiveTodos[boxNumber].length - 1; j >= 0; j -= 1) {
+          while (archiveTodos[boxNumber][j].cn === "hide-from-archive") {
+            j -= 1;
+          }
+          archiveTodos[boxNumber][j].cn = "hide-from-archive";
+          j = -1;
+        }
+      }
     }
   });
   setArchiveTodos(archiveTodos);
@@ -29,8 +52,12 @@ const renderTodoBox = (
     addedTodos.forEach((newTodo, i) => {
       const [delTodo] = todos[boxNumber].splice(deletedTodosIdxs[i], 1);
       delTodo.cn = "add-to-archive";
-      if (!dontGoToArchiveIdxs.includes(deletedTodosIdxs[i])) {
-        deletedTodos.push(delTodo);
+      if (!selfUpdatedNewsIdxs.includes(deletedTodosIdxs[i])) {
+        if (selfDeletedNewsIdxs.includes(deletedTodosIdxs[i])) {
+          deletedTodos.push(delTodo);
+        } else {
+          addedToArchiveTodos.push(delTodo);
+        }
       }
       newTodo.cn = "initial";
       todos[boxNumber].unshift(newTodo);
@@ -41,7 +68,7 @@ const renderTodoBox = (
     setTodos({ ...todos, [boxNumber]: [...todos[boxNumber]] });
     setArchiveTodos((prevState) => ({
       ...prevState,
-      [boxNumber]: [...deletedTodos, ...prevState[boxNumber]],
+      [boxNumber]: [...addedToArchiveTodos, ...prevState[boxNumber], ...deletedTodos],
     }));
     console.log("Новость обновлена, пора запускать autoUpdate"); // не забыть удалить
     setIsAutoUpdateRun(true);

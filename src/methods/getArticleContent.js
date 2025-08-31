@@ -1,5 +1,5 @@
 import React from "react";
-import { bloknotRostovPath } from "../routes";
+import { bloknotRostovPath, noimagePath, noimageStopPath } from "../routes";
 
 const feeds = {
   rbc: "Читать новость на сайте РБК.ru",
@@ -70,7 +70,7 @@ const getBloknotComponents = (title, articleBody, link) => {
       </a>
     </p>,
   );
-  for (let i = 1; i <= 4; i += 1) {
+  for (let i = 1; i <= 5; i += 1) {
     result.push(<br key={strings.length + i + 2}></br>);
   }
   return result;
@@ -104,7 +104,7 @@ const getRbcAndMailComponents = (headline, articleBody, description, link, feed)
     </p>,
   );
 
-  for (let i = 1; i <= 4; i += 1) {
+  for (let i = 1; i <= 5; i += 1) {
     result.push(<br key={paragraphs.length + i + 2}></br>);
   }
   return result;
@@ -132,7 +132,7 @@ const searchImgLink = (content, searchText, alternativeSearchText) => {
       ? content.indexOf(alternativeSearchText)
       : content.indexOf(searchText);
   if (indexOfText < 0) {
-    return "./src/assets/noimage.jpg";
+    return noimagePath;
   }
   const firstQuoteIndex = content.indexOf('"', content.indexOf('"', indexOfText) + 1) + 1;
   const lastQuoteIndex = content.indexOf('"', firstQuoteIndex);
@@ -169,11 +169,15 @@ const getArticleContent = ({ feed, title, description, fullText, imgUrl, link },
       headline = searchFullText(data, "headline", '"', null);
       articleBody = searchFullText(data, "articleBody", '"', null);
       articleContent = getRbcAndMailComponents(headline, articleBody, description, link, feed);
-      resultImgLink = searchImgLink(
-        data,
-        "yandex_recommendations_image",
-        "yandex_recommendations_category",
-      );
+      if (articleBody === "Не удалось загрузить новость") {
+        resultImgLink = noimageStopPath;
+      } else {
+        resultImgLink = searchImgLink(
+          data,
+          "yandex_recommendations_image",
+          "yandex_recommendations_category",
+        );
+      }
       break;
     case "rbc":
       articleContent = getRbcAndMailComponents(
